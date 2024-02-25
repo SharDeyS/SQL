@@ -44,7 +44,7 @@ SELECT SUM(price), category
 FROM superstore
 WHERE category = 'Kitchen Supplies';
 
-#Use a SELECT statement to show minimum and maximum cost of items in category of "Furnishings".
+#Use a SELECT statement to show minimum and maximum cost of items in category of "Furnishings" with an alias.
 SELECT MIN(price) AS "Min", MAX(price) AS "Max", category
 FROM superstore
 WHERE category = 'Furnishings';
