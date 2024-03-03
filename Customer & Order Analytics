@@ -1,0 +1,56 @@
+#In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data. 
+
+
+#1.Display how many January orders were placed
+SELECT COUNT(Product) 
+FROM BIT_DB.JanSales
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+
+
+#2.Display how many iPhone orders there were
+SELECT count(PRODUCT) 
+FROM BIT_DB.JanSales
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID' 
+AND Product = 'iPhone';
+
+
+#3.Customer account numbers for all orders placed in February
+SELECT DISTINCT acctnum
+FROM BIT_DB.customers
+INNER JOIN BIT_DB.FebSales
+ON FebSales.orderID = customers.order_id
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+
+
+#4.Product and price of the cheaptest product sold in January
+SELECT distinct Product, price 
+FROM BIT_DB.JanSales 
+ORDER BY price ASC LIMIT 1;
+
+
+#5.Total revenue for each product sold in Jan
+SELECT Product,SUM(quantity)*price AS Total_Rev
+FROM BIT_DB.JanSales
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID'
+GROUP BY product;
+
+
+#6.Showcase products sold in Feb at address 548 Lincoln St, Seattle, WA 98101, the amt sold and total revenue--
+SELECT Product, SUM(Quantity), SUM(Quantity)*price AS Total_Rev
+FROM BIT_DB.FebSales
+WHERE location = '548 Lincoln St, Seattle, WA 98101'
+GROUP BY Product;
+
+
+#7.Amount of customers who ordered more than 2 products at a time in Feb and average amount spent
+SELECT COUNT(cust.acctnum), AVG(Quantity*price) AS Avg_Rev
+FROM BIT_DB.FebSales
+LEFT JOIN BIT_DB.customers AS cust
+ON cust.order_id = FebSales.orderID
+WHERE Febsales.Quantity > 2
+AND length(orderid) = 6 
+AND orderid <> 'Order ID';
