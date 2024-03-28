@@ -1,0 +1,61 @@
+#For this SQL, I am querying a database for a digital media store to pull valuable insights from the data.
+
+
+# Show how many invoices there are for 2009
+SELECT COUNT(*)
+FROM chinook.Invoices
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+# Show total amount of sales for 2009
+SELECT SUM(Total)
+FROM chinook.Invoices
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+# Display Germany customers only
+SELECT *
+FROM chinook.customers
+WHERE Country = 'Germany';
+
+# Each sales agent's total ssales made rounded
+SELECT emp.FirstName, emp.LastName,
+ROUND(SUM(Inv.Total), 2) as 'Total Sales' 
+FROM chinook.Employees emp
+
+JOIN chinook.Customers cust 
+ON cust.SupportRepId = emp.EmployeeId
+
+JOIN chinook.Invoices Inv 
+ON Inv.CustomerId = cust.CustomerId
+
+WHERE emp.Title = 'Sales Support Agent' 
+GROUP BY emp.FirstName;
+
+# Diplsay track names including album title, genre and media type
+SELECT t.Name AS 'Track Name', a.Title AS 'Album Title', m.Name AS 'Media Type', g.Name AS 'Genre'
+FROM chinook.tracks t
+JOIN chinook.Albums a 
+on a.AlbumId = t.AlbumId
+
+JOIN chinook.Media_Types m
+on m.MediaTypeId = t.MediaTypeId
+
+JOIN chinook.Genres g
+on g.GenreId = t.GenreId;
+
+# Query artist name and purchased track name with invoice line ID
+SELECT ar.name as Artist, t.Name as Track, i.InvoiceLineId
+FROM chinook.Invoice_items i
+LEFT JOIN chinook.tracks t 
+ON i.TrackID = t.TrackID
+
+INNER JOIN chinook.albums a
+ON a.AlbumID=t.AlbumID
+
+LEFT JOIN chinook.artists ar
+ON ar.ArtistID=a.ArtistID;
+
+# Display sales agent name, customer name, country, and invoice total for all invoices
+SELECT empl.LastName, empl.Firstname, cust.FirstName AS CustFirstN, cust.LastName AS CustLastN, cust.Country, inv.total
+FROM chinook.employees empl 
+JOIN chinook.Customers cust ON cust.SupportRepId = empl.EmployeeId
+JOIN chinook.Invoices Inv ON Inv.CustomerId = cust.CustomerId;
